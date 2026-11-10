@@ -1,0 +1,37 @@
+
+# Frontend
+frontend-development/node_modules/
+frontend-development/dist/
+frontend-development/.env
+frontend-development/.env.*
+
+# Backend build files
+backend-development/target/
+backend-development/bin/
+
+# Sensitive Spring configuration
+backend-development/src/main/resources/application.properties
+backend-development/src/main/resources/application-*.properties
+
+!backend-development/src/main/resources/application.example.properties
+
+
+# Eclipse generated files
+backend-development/.settings/
+backend-development/.classpath
+backend-development/.project
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Environment files anywhere in the project
+.env
+.env.*
+!.env.example
