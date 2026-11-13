@@ -207,7 +207,7 @@ Make sure you have installed:
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Spill.git
+git clone https://github.com/Tarang-RG/Spill-Project.git
 
 cd Spill
 ```
