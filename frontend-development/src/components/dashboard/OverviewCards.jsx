@@ -1,30 +1,37 @@
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 
-const cards = [
-  {
-    title: "You owe",
-    amount: "₹0.00",
-    icon: TrendingDown,
-    color: "text-red-500",
-    bg: "bg-red-50",
-  },
-  {
-    title: "You're owed",
-    amount: "₹0.00",
-    icon: TrendingUp,
-    color: "text-green-600",
-    bg: "bg-green-50",
-  },
-  {
-    title: "Net balance",
-    amount: "₹0.00",
-    icon: Wallet,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-];
-
-export default function OverviewCards() {
+export default function OverviewCards({
+    youOwe = 0,
+    youreOwed = 0,
+}) {
+  const netBalance = youreOwed - youOwe;
+  const cards = [
+        {
+            title: "You owe",
+            amount: youOwe,
+            icon: TrendingDown,
+            color: "text-red-500",
+            bg: "bg-red-50",
+        },
+        {
+            title: "You're owed",
+            amount: youreOwed,
+            icon: TrendingUp,
+            color: "text-green-600",
+            bg: "bg-green-50",
+        },
+        {
+            title: "Net balance",
+            amount: netBalance,
+            icon: Wallet,
+            color: netBalance >= 0
+                ? "text-blue-600"
+                : "text-red-500",
+            bg: netBalance >= 0
+                ? "bg-blue-50"
+                : "bg-red-50",
+        },
+    ];
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
       {cards.map((card) => {

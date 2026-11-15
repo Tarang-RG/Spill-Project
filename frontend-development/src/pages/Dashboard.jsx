@@ -8,7 +8,7 @@ import GroupList from "../components/dashboard/GroupList";
 import RecentActivity from "../components/dashboard/RecentActivity";
 
 import { getCurrentUser, logoutUser } from "../services/authservice";
-import { getMyGroups } from "../services/groupService";
+import { getMyGroups, getGroupBalances } from "../services/groupService";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -18,6 +18,55 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState("Dashboard");
+  const [overallBalances, setOverallBalances] = useState({ youOwe: 0, youreOwed: 0, });
+
+  async function fetchOverallBalances() {
+      try {
+          const groups = await getMyGroups();
+
+          const storedUser = JSON.parse(
+              localStorage.getItem("user") || "null"
+          );
+
+          const currentUserId = storedUser?.userId;
+
+          if (!currentUserId) return;
+
+          // Fetch balances from every group
+          const balanceResults = await Promise.all(
+              groups.map(group => getGroupBalances(group.id))
+          );
+
+          let youOwe = 0;
+          let youreOwed = 0;
+
+          balanceResults.forEach(balanceData => {
+              const myBalance = balanceData.members?.find(
+                  member =>
+                      Number(member.userId) === Number(currentUserId)
+              );
+
+              if (!myBalance) return;
+
+              const netBalance = Number(myBalance.netBalance);
+
+              if (netBalance < 0) {
+                  youOwe += Math.abs(netBalance);
+              } else if (netBalance > 0) {
+                  youreOwed += netBalance;
+              }
+          });
+
+          setOverallBalances({
+              youOwe,
+              youreOwed,
+          });
+
+      } catch (error) {
+          console.error("Error fetching overall balances:", error);
+      }
+  }
+
 
   useEffect(() => {
     async function fetchUser() {
@@ -34,6 +83,7 @@ export default function Dashboard() {
             email: data.email,
           })
         );
+        fetchOverallBalances();
       } catch (error) {
         logoutUser();
         navigate("/", { replace: true });
@@ -81,7 +131,7 @@ export default function Dashboard() {
 
         {activePage === "Dashboard" && (
           <>
-            <OverviewCards />
+            <OverviewCards youOwe={overallBalances.youOwe} youreOwed={overallBalances.youreOwed} />
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
               <div className="xl:col-span-2">
