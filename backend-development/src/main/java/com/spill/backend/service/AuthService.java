@@ -12,7 +12,6 @@ import com.spill.backend.dto.RegisterRequest;
 import com.spill.backend.model.User;
 import com.spill.backend.repository.UserRepository;
 import com.spill.backend.dto.LoginResponse;
-import com.spill.backend.service.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
